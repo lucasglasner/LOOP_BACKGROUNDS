@@ -13,26 +13,19 @@ Created on Sat Nov 20 14:51:06 2021
 import requests
 import os
 import sys
+from glob import glob
 from time import sleep
 
+print("Beggining request_GOES16.py...")
 #%%
 #Path to NOAA GOES16 Images Repository
 NOAA_GOES16 = "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/"
 
-#Request time
-order       = r'date +%Y-%b-%d_%H:%M:%S | \
-	      sed -e "s/\b\(.\)/\u\1/g"'
-now         = os.popen(order).read()[:-1]
-
-#Path to downloaded image:
-#outpath     = "./images"   
-outpath     = sys.argv[1]
-outpath     = outpath+"/GOES16_GEOCOLOR_"+now+".jpg"
 
 #Image resolution in pixels.
 #Aviable options: 339x339, 678x678, 1808x1808, 5424x5424, 10848x10848
 res         = "1808x1808"
-
+print("Image resolution is: "+res+" pixels.")
 ###############################################################################
 #%%
 #Make HTTP request to NOAA repository
@@ -46,6 +39,7 @@ while req =='':
         print("Sleeping 10 seconds and trying again...")
         sleep(10)
         continue
+print("Successfuly connecting to server...")
 #Save repository tree in a temporary file
 with open(".GOES16_DIRECTORY.txt","w") as file:
 	file.write(req.text)
@@ -53,10 +47,10 @@ with open(".GOES16_DIRECTORY.txt","w") as file:
 	
 #Use regular expression bash commands to grab latest image url
 order = r'cat .GOES16_DIRECTORY.txt | \
-	grep '+res+r' | \
-	grep $(date +%d-%b-%Y | \
-	sed -e "s/\b\(.\)/\u\1/g") | \
-	tail -n 1'
+	    grep '+res+r' | \
+	    grep $(date +%d-%b-%Y | \
+	    sed -e "s/\b\(.\)/\u\1/g") | \
+	    tail -n 1'
 url = os.popen(order).read()
 url = url.split(">")[1]
 url = url.split("<")[0]
@@ -65,5 +59,19 @@ url = NOAA_GOES16 + url
 #Clean directory
 os.system("rm -rf .GOES16_DIRECTORY.txt")
 
-#Download image in desired path
-os.system("wget -O "+outpath+" "+url) 
+
+img_code    = url.split("/")[-1].split("_")[0]
+#Path to downloaded image:
+#outpath     = "./images"   
+outpath     = sys.argv[1]
+outpath     = outpath+"/GOES16_GEOCOLOR_"+img_code+".jpg"
+
+#Download image in desired path if doesnt already exists.
+print("Latest image code: "+img_code)
+if not os.path.isfile(outpath):
+    os.system("wget -O "+outpath+" "+url)
+    print("Done with download.")
+else:
+    print("Latest image already exist.")
+
+ 
