@@ -44,25 +44,25 @@ print("Successfuly connecting to server...")
 with open(".GOES16_DIRECTORY.txt","w") as file:
 	file.write(req.text)
 	file.close()
-	
+
 #Use regular expression bash commands to grab latest image url
 order = r'cat .GOES16_DIRECTORY.txt | \
 	    grep '+res+r' | \
-	    grep $(date +%d-%b-%Y | \
-	    sed -e "s/\b\(.\)/\u\1/g") | \
+	    grep $(date -u +%d-%b-%Y | sed -e "s/\b\(.\)/\u\1/g") | \
 	    tail -n 1'
 url = os.popen(order).read()
 url = url.split(">")[1]
 url = url.split("<")[0]
 url = NOAA_GOES16 + url
 
+#%%
 #Clean directory
 os.system("rm -rf .GOES16_DIRECTORY.txt")
 
 
 img_code    = url.split("/")[-1].split("_")[0]
 #Path to downloaded image:
-#outpath     = "./images"   
+# outpath     = "./images"  
 outpath     = sys.argv[1]
 outpath     = outpath+"/GOES16_GEOCOLOR_"+img_code+".jpg"
 

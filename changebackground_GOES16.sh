@@ -34,8 +34,8 @@ else
     sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" dconf write "/org/gnome/desktop/background/primary-color" "'#000000'"
     sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" dconf write "/org/gnome/desktop/background/picture-options" "'scaled'"
     sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" dconf write "/org/gnome/desktop/background/picture-uri" "'file://$imgdir/$filename'"
-    cp $imgdir/$filename ./$filename
-    mv ./$filename .CURRENTBG_$code.jpg
+    cp $imgdir/$filename $imgdir/../$filename
+    mv $imgdir/../$filename $imgdir/../.CURRENTBG_$code.jpg
 fi
 #Remove images
 if [ $(ls $imgdir | grep GOES16_GEOCOLOR -c) -gt 6 ]; then
