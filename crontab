@@ -1,3 +1,4 @@
+
 # Edit this file to introduce tasks to be run by cron.
 # 
 # Each task to run has to be defined through a single line
@@ -23,11 +24,5 @@
 # m h  dom mon dow   command
 
 DISPLAY=:0
-0,15 * * * * dbus-launch ~/programs/LOOP_BACKGROUND/changebackground_GOES16.sh >> ~/programs/LOOP_BACKGROUND/.daily-backup.log 2>&1
-0,15 * * * * dbus-launch date >> .daily-backup.log 2>&1
-@reboot dbus-launch ~/programs/LOOP_BACKGROUND/changebackground_GOES16.sh >> ~/programs/LOOP_BACKGROUND/.daily-backup_boot.log 2>&1
-#@reboot dbus-launch ~/programs/LOOP_BACKGROUND/changebackground_GOES16_WHILETRUE.sh >> ~/programs/LOOP_BACKGROUND/.daily-backup.log 2>&1
-@reboot rm ~/programs/LOOP_BACKGROUND/.daily-backup.log
-#@reboot cd /home/lucas/programs/LOOP_BACKGROUND && env $(cat /home/lucas/some_enviroments/cronenv | xargs) /home/lucas/programs/LOOP_BACKGROUND/changebackground_GOES16.sh
-#0 11 * * 1 rm -rf /home/lucas/programs/LOOP_BACKGROUND/.log
+* * * * * dbus-launch /home/lucas/programs/LOOP_BACKGROUND/changebackground_GOES16.sh > /home/lucas/programs/LOOP_BACKGROUND/.daily-backup.log 2>&1
 
